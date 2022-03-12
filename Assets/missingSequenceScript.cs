@@ -194,7 +194,7 @@ public class missingSequenceScript : MonoBehaviour
         missingSequences.Shuffle();
         for (int i = 0; i < generatedSequences.Length; i++)
         {
-            int rnd = UnityEngine.Random.Range(0, 4);
+            int rnd = UnityEngine.Random.Range(0, 5);
             int start = 0;
             int secondStart = 0;
             int offStart = 0;
@@ -272,7 +272,7 @@ public class missingSequenceScript : MonoBehaviour
                     }
                     break;
                 case 2:
-                    start = UnityEngine.Random.Range(0, 3000);
+                    start = UnityEngine.Random.Range(0, 5000);
                     k = UnityEngine.Random.Range(0, 8);
                     switch (k)
                     {
@@ -366,6 +366,27 @@ public class missingSequenceScript : MonoBehaviour
                             sb.Append("a combination via multiplication of an arithmetic progression with first term " + start + " and offset " + offset + ", and a set of ascending prime numbers starting with " + primes[0]);
                             break;
                     }
+                    break;
+
+                case 4:
+                    k = UnityEngine.Random.Range(0, 3);
+                    offset = UnityEngine.Random.Range(-5, 6);
+                    switch (k)
+                    {
+                        case 0:
+                            start = UnityEngine.Random.Range(0, sequencePatterns.primes.Count - 6);
+                            sb.Append("a set of primes with offset " + offset + " starting from " + sequencePatterns.primes[start]);
+                            break;
+                        case 1:
+                            start = UnityEngine.Random.Range(0, sequencePatterns.squares.Count - 6);
+                            sb.Append("a set of perfect squares with offset " + offset + " starting from " + sequencePatterns.squares[start]);
+                            break;
+                        case 2:
+                            start = UnityEngine.Random.Range(0, sequencePatterns.cubes.Count - 6);
+                            sb.Append("a set of perfect cubes with offset " + offset + " starting from " + sequencePatterns.cubes[start]);
+                            break;
+                    }
+                    sequence = sequencePatterns.SpecialTerms(start, k, offset, 6);
                     break;
             }
             pattern = sb.ToString();
@@ -628,7 +649,7 @@ public class missingSequenceScript : MonoBehaviour
 
     //Twitch plays
     #pragma warning disable 414
-    private readonly string TwitchHelpMessage = @"<!{0} screen> to press the screen, <!{0} set 42 31> to set 42 to a selected rectangle, then set 31 to the next, <!{0} submit 10 23> to set 10 to a selected rectangle, then set 23 to the next, then press the screen";
+    private readonly string TwitchHelpMessage = @"<!{0} screen> to press the screen, <!{0} set 42 31> to set 42 to a selected rectangle, then set 31 to the next, <!{0} submit 10 23> to set 10 to a selected rectangle, then set 23 to the next, then press the screen, <!{0} select 4> to select the fourth rectangle, or the next rectangle if no value is mentioned";
     #pragma warning restore 414
 
     IEnumerator ProcessTwitchCommand(string command)
@@ -637,6 +658,18 @@ public class missingSequenceScript : MonoBehaviour
         if (Regex.IsMatch(command, @"^\s*screen\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
         {
             screen.OnInteract();
+            yield return null;
+        }
+        else if (Regex.IsMatch(command, @"^\s*submit\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
+        {
+            if (!inputMode) { yield return "sendtochaterror The module's not in submission mode yet. Command ignored."; yield break; }
+            screen.OnInteract();
+            yield return null;
+        }
+        else if (Regex.IsMatch(command, @"^\s*select\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
+        {
+            if (!inputMode) { yield return "sendtochaterror The module's not in submission mode yet. Command ignored."; yield break; }
+            keypadButtons[11].OnInteract();
             yield return null;
         }
         else
@@ -659,7 +692,12 @@ public class missingSequenceScript : MonoBehaviour
                 }
                 for (int i = 1; i < parameters.Length; i++)
                 {
-                    for (int k = 0; k < 4; k++)//Clearing the rectangle first
+                    if (parameters[i].Length > 4)
+                    {
+                        yield return "sendtochaterror You can only set up to 4 digits per value.";
+                        yield break;
+                    }
+                    for (int k = 0; k < 4 - parameters[i].Length; k++)//Clearing the rectangle first
                     {
                         presses.Add(keypadButtons[0]);
                     }
@@ -690,7 +728,7 @@ public class missingSequenceScript : MonoBehaviour
                 foreach (KMSelectable i in presses)
                 {
                     i.OnInteract();
-                    yield return null;
+                    yield return new WaitForSeconds(0.05f);
                 }
                 if (Regex.IsMatch(parameters[0], @"^\s*submit\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
                 {
@@ -698,15 +736,67 @@ public class missingSequenceScript : MonoBehaviour
                     yield return null;
                 }
             }
+            else if (Regex.IsMatch(parameters[0], @"^\s*select\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
+            {
+                if (parameters.Length > 2) { yield return "sendtochaterror Invalid command."; yield break; }
+                int n = 0;
+                bool c = int.TryParse(parameters[1], out n);
+                if (!c) { yield return "sendtochaterror Invalid command."; yield break; }
+                n -= 1;
+                if (n < 0 || n > 6) { yield return "sendtochaterror The rectangle to select is invalid."; yield break; }
+                if (answerChecks[n]) { yield return "sendtochaterror The rectangle mentioned is not selectable."; yield break; }
+                while (selectedRectangle != n)
+                {
+                    keypadButtons[11].OnInteract();
+                    yield return new WaitForSeconds(0.1f);
+                }
+            }
         }
 
     }
-    
 
-    /*Force Solve Handler
     IEnumerator TwitchHandleForcedSolve()
     {
+        bool[] submittedNumbers = new bool[6];
+        for (int i = 0; i < submittedNumbers.Length; i++)
+        {
+            submittedNumbers[i] = answerChecks[i];
+        }
+        while (!moduleSolved)
+        {
+            if (isAnimating) { yield return null; }
+            else if (!inputMode) { screen.OnInteract(); }
+            else
+            {
+                for (int j = 0; j < submittedNumbers.Length; j++)
+                {
+                    if (!submittedNumbers[j])
+                    {
+                        while (isAnimating)
+                        {
+                            yield return null;
+                        }
+                        bool negate = false;
+                        if (sequenceAnswers[selectedRectangle] < 0) { negate = true; }
+                        string s = (Math.Abs(sequenceAnswers[selectedRectangle])).ToString("0000");
+                        for (int i = 0; i < s.Length; i++)
+                        {
+                            keypadButtons[s[i] - '0'].OnInteract();
+                            yield return null;
+                        }
+                        if (negate) { keypadButtons[10].OnInteract(); yield return null; }
+                        submittedNumbers[j] = true;
+                        yield return null;
+                        keypadButtons[11].OnInteract();
+                        yield return null;
+                    }
+                    yield return null;
+                }
+                screen.OnInteract();
+            }
+            yield return null;
+        }
         yield return null;
     }
-    */
+
 }

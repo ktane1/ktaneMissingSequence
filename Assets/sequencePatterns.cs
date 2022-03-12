@@ -345,6 +345,28 @@ public class sequencePatterns : MonoBehaviour
         return results;
     }
 
+    //Special terms with a certain offset
+    public static List<int> SpecialTerms(int start, int rnd, int offset, int termNo)
+    {
+        List<int> results = new List<int>();
+        for (int i = 0; i < termNo; i++)
+        {
+            switch (rnd)
+            {
+                case 0://Primes
+                    results.Add(primes[start + i] + offset);
+                    break;
+                case 1://Perfect squares
+                    results.Add(squares[start + i] + offset);
+                    break;
+                case 2://Perfect cubes
+                    results.Add(cubes[start + i] + offset);
+                    break;
+            }
+        }
+        return results;
+    }
+
     //Fibonacci progression
     public static List<int> Fib(int first, int second, int termNo)
     {
