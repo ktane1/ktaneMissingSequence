@@ -296,7 +296,7 @@ public class sequencePatterns : MonoBehaviour
 
             case 5://Perfect Cubes
                 rnd2 = UnityEngine.Random.Range(0, 3);
-                k = UnityEngine.Random.Range(0, cubes.Count - 6);
+                k = UnityEngine.Random.Range(0, cubes.Count - 10);
                 for (int i = 0; i < termNo; i++)
                 {
                     if (i == 0) { results.Add(start); }

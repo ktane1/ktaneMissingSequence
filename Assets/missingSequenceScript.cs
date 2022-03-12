@@ -768,9 +768,9 @@ public class missingSequenceScript : MonoBehaviour
             else if (!inputMode) { screen.OnInteract(); }
             else
             {
-                for (int j = 0; j < submittedNumbers.Length; j++)
+                while(!(submittedNumbers.All(x => x)))
                 {
-                    if (!submittedNumbers[j])
+                    if (!submittedNumbers[selectedRectangle])
                     {
                         while (isAnimating)
                         {
@@ -785,8 +785,10 @@ public class missingSequenceScript : MonoBehaviour
                             yield return null;
                         }
                         if (negate) { keypadButtons[10].OnInteract(); yield return null; }
-                        submittedNumbers[j] = true;
-                        yield return null;
+                        if (mainRectangleInputs[selectedRectangle] == sequenceAnswers[selectedRectangle])
+                        {
+                            submittedNumbers[selectedRectangle] = true;
+                        }
                         keypadButtons[11].OnInteract();
                         yield return null;
                     }
