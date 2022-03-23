@@ -165,6 +165,7 @@ public class missingSequenceScript : MonoBehaviour
         }
         if (k == 11)
         {
+            keypadButtons[k].AddInteractionPunch(0.2f);
             selectedRectangle++;
             if (selectedRectangle > 5) { selectedRectangle = 0; }
             while (answerChecks[selectedRectangle])
@@ -277,9 +278,17 @@ public class missingSequenceScript : MonoBehaviour
                     switch (k)
                     {
                         case 0:
+                            while (start % 9 == 0)
+                            {
+                                start++;
+                            }
                             sb.Append("the digital root as offset");
                             break;
                         case 1:
+                            while (sequencePatterns.SumOfDigits(start) % 9 == 0)
+                            {
+                                start++;
+                            }
                             sb.Append("the sum of digits as offset");
                             break;
                         case 2:
@@ -409,7 +418,7 @@ public class missingSequenceScript : MonoBehaviour
             sb.Remove(sb.Length - 2, 2);
             string chosenColour = colours[selectedColours[i]].name;
             chosenColour = chosenColour.Replace("Mat", "");
-            Debug.LogFormat("[Missing Sequence #{0}]: {1} Sequence: {2}.", moduleId, chosenColour, sb.ToString());
+            Debug.LogFormat("[Missing Sequence #{0}]: {1} Sequence: {2}", moduleId, chosenColour, sb.ToString());
             Debug.LogFormat("[Missing Sequence #{0}]: {1} Sequence Pattern is {2}.", moduleId, chosenColour, pattern);
             Debug.LogFormat("[Missing Sequence #{0}]: {1} Sequence's Answer: {2}.", moduleId, chosenColour, sequenceAnswers[i].ToString());
             sb.Remove(0, sb.Length);
@@ -655,6 +664,7 @@ public class missingSequenceScript : MonoBehaviour
     IEnumerator ProcessTwitchCommand(string command)
     {
         command = command.ToLowerInvariant().Trim();
+        string[] parameters = command.Split(' ');
         if (Regex.IsMatch(command, @"^\s*screen\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
         {
             screen.OnInteract();
@@ -674,7 +684,6 @@ public class missingSequenceScript : MonoBehaviour
         }
         else
         {
-            string[] parameters = command.Split(' ');
             List<KMSelectable> presses = new List<KMSelectable>();
             bool negate = false;
             if ((Regex.IsMatch(parameters[0], @"^\s*set\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)) || (Regex.IsMatch(parameters[0], @"^\s*submit\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)))
@@ -738,6 +747,7 @@ public class missingSequenceScript : MonoBehaviour
             }
             else if (Regex.IsMatch(parameters[0], @"^\s*select\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
             {
+                if (!inputMode) { yield return "sendtochaterror The module's not in submission mode yet. Command ignored."; yield break; }
                 if (parameters.Length > 2) { yield return "sendtochaterror Invalid command."; yield break; }
                 int n = 0;
                 bool c = int.TryParse(parameters[1], out n);
@@ -750,6 +760,11 @@ public class missingSequenceScript : MonoBehaviour
                     keypadButtons[11].OnInteract();
                     yield return new WaitForSeconds(0.1f);
                 }
+            }
+            else
+            {
+                yield return "sendtochaterror Invalid command.";
+                yield break;
             }
         }
 

@@ -173,49 +173,36 @@ public class sequencePatterns : MonoBehaviour
         switch (rnd)
         {
             case 0://Digital root
-                rnd2 = UnityEngine.Random.Range(0, 3);
+                rnd2 = UnityEngine.Random.Range(0, 2);
                 for (int i = 0; i < termNo; i++)
                 {
-                    if (i == 0) { results.Add(start); }
+                    if (i == 0) 
+                    {
+                        if (rnd == 0 )
+                        {
+                            while ((start + DR(start)) % 9 == 0) { start++; }
+                        }
+                        else if (rnd == 1)
+                        {
+                            while ((start - DR(start)) % 9 == 0) { start++; }
+                        }
+                        results.Add(start); 
+                    }
                     else
                     {
                         if (rnd2 == 0) { results.Add(results[i - 1] + DR(results[i - 1])); }//Addition
                         else if (rnd2 == 1) { results.Add(results[i - 1] - DR(results[i - 1])); }//Subtraction
-                        else if (rnd2 == 2)//Alternate between addition and subtraction
-                        {
-                            if (i % 2 == 0)
-                            {
-                                results.Add(results[i - 1] + DR(results[i - 1]));
-                            }
-                            else
-                            {
-                                results.Add(results[i - 1] - DR(results[i - 1]));
-                            }
-                        }
                     }
                 }
                 break;
 
             case 1://Sum of digits
-                rnd2 = UnityEngine.Random.Range(0, 3);
                 for (int i = 0; i < termNo; i++)
                 {
                     if (i == 0) { results.Add(start); }
                     else
                     {
-                        if (rnd2 == 0) { results.Add(results[i - 1] + SumOfDigits(results[i - 1])); }//Addition
-                        else if (rnd2 == 1) { results.Add(results[i - 1] - SumOfDigits(results[i - 1])); }//Subtraction
-                        else if (rnd2 == 2)//Alternate between addition and subtraction
-                        {
-                            if (i % 2 == 0)
-                            {
-                                results.Add(results[i - 1] + SumOfDigits(results[i - 1]));
-                            }
-                            else
-                            {
-                                results.Add(results[i - 1] - SumOfDigits(results[i - 1]));
-                            }
-                        }
+                        results.Add(results[i - 1] + SumOfDigits(results[i - 1]));//Addition
                     }
                 }
                 break;
