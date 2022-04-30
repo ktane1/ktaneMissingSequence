@@ -210,7 +210,7 @@ public class missingSequenceScript : MonoBehaviour
                     {
                         start = UnityEngine.Random.Range(-1000, 1000);
                         offStart = UnityEngine.Random.Range(-100, 100);
-                        offset = UnityEngine.Random.Range(-100, 100);
+                        offset = UnityEngine.Random.Range(-50, 50);
                         sequence = sequencePatterns.APAPOff(start, offStart, offset, 6);
                         sb.Append("an arithmetic progression among the offsets with offset " + offset);
                         break;
@@ -266,7 +266,7 @@ public class missingSequenceScript : MonoBehaviour
                             break;
                         case 3:
                             start = UnityEngine.Random.Range(-3, 3);
-                            secondStart = UnityEngine.Random.Range(start + 1, start + 3);
+                            secondStart = Convert.ToInt32(Math.Abs(UnityEngine.Random.Range(start + 1, start + 3)));
                             sequence = sequencePatterns.RecursiveProd(start, secondStart, 6);
                             sb.Append("a recursive function of a+b-ab, where a is the second previous term and b is the previous term");
                             break;
@@ -380,6 +380,7 @@ public class missingSequenceScript : MonoBehaviour
                 case 4:
                     k = UnityEngine.Random.Range(0, 3);
                     offset = UnityEngine.Random.Range(-5, 6);
+                    if (offset == 0) { offset++; }
                     switch (k)
                     {
                         case 0:
@@ -701,37 +702,21 @@ public class missingSequenceScript : MonoBehaviour
                 }
                 for (int i = 1; i < parameters.Length; i++)
                 {
-                    if (parameters[i].Length > 4)
+                    int test = 0;
+                    bool v = int.TryParse(parameters[i], out test);
+                    if (!v) { yield return "sendtochaterror Invalid command."; yield break; }
+                    if (Math.Abs(test).ToString().Length > 4)
                     {
                         yield return "sendtochaterror You can only set up to 4 digits per value.";
                         yield break;
                     }
-                    for (int k = 0; k < 4 - parameters[i].Length; k++)//Clearing the rectangle first
+                    if (test < 0) { negate = true; }
+                    string numToInput = Math.Abs(test).ToString("0000");
+                    for (int j = 0; j < numToInput.Length; j++)
                     {
-                        presses.Add(keypadButtons[0]);
+                        presses.Add(keypadButtons[numToInput[j] - '0']);
                     }
-                    for (int j = 0; j < parameters[i].Length; j++)
-                    { 
-                        if ((j != 0 && parameters[i][j] == '-') || parameters[i] == "-")
-                        {
-                            yield return "sendtochaterror One of the values is invalid.";
-                            yield break; 
-                        }
-                        else if (parameters[i][j] == '-')
-                        {
-                            negate = true;
-                        }
-                        else if (parameters[i][j] - '0' >= 0 || parameters[i][j] - '0' <= 9)
-                        {
-                            presses.Add(keypadButtons[parameters[i][j] - '0']);
-                        }
-                        else
-                        {
-                            yield return "sendtochaterror One of the values is invalid.";
-                            yield break;
-                        }
-                    }
-                    if (negate == true) { presses.Add(keypadButtons[10]); negate = false; }
+                    if ((negate && mainRectangleInputs[i] > 0) || (!negate && mainRectangleInputs[i] < 0)) { presses.Add(keypadButtons[10]); negate = false; }
                     presses.Add(keypadButtons[11]);
                 }
                 foreach (KMSelectable i in presses)
@@ -799,7 +784,7 @@ public class missingSequenceScript : MonoBehaviour
                             keypadButtons[s[i] - '0'].OnInteract();
                             yield return null;
                         }
-                        if (negate) { keypadButtons[10].OnInteract(); yield return null; }
+                        if ((negate && mainRectangleInputs[selectedRectangle] > 0) || (!negate && mainRectangleInputs[selectedRectangle] < 0)) { keypadButtons[10].OnInteract(); yield return null; }
                         if (mainRectangleInputs[selectedRectangle] == sequenceAnswers[selectedRectangle])
                         {
                             submittedNumbers[selectedRectangle] = true;

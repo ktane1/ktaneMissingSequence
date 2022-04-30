@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 0dc3470d60139f94fb9563835b6f8937
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - MaskShader: {fileID: 4800000, guid: 5681fbd50c11fbb4aa1b09d874c7e70b, type: 3}
+  - DiffuseTintShader: {fileID: 4800000, guid: 3c7bf3224da78b041b50bcfeff37b36f, type: 3}
+  - TextShader: {fileID: 4800000, guid: da1dbc57aa9d0da4c90d94874db52a44, type: 3}
+  - DiffuseTextShader: {fileID: 4800000, guid: 70f0b9ded22d242479bf232cb0c580fe, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
