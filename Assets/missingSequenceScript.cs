@@ -710,13 +710,13 @@ public class missingSequenceScript : MonoBehaviour
                         yield return "sendtochaterror You can only set up to 4 digits per value.";
                         yield break;
                     }
-                    if (test < 0) { negate = true; }
+                    if (test < 0) { negate = true; } else { negate = false; }
                     string numToInput = Math.Abs(test).ToString("0000");
                     for (int j = 0; j < numToInput.Length; j++)
                     {
                         presses.Add(keypadButtons[numToInput[j] - '0']);
                     }
-                    if ((negate && mainRectangleInputs[i] > 0) || (!negate && mainRectangleInputs[i] < 0)) { presses.Add(keypadButtons[10]); negate = false; }
+                    if ((negate && mainRectangleInputs[(selectedRectangle + i - 1) % 6] >= 0) || (!negate && mainRectangleInputs[(selectedRectangle + i - 1) % 6] < 0)) { presses.Add(keypadButtons[10]);}
                     presses.Add(keypadButtons[11]);
                 }
                 foreach (KMSelectable i in presses)
