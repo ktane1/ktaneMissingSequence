@@ -265,8 +265,10 @@ public class missingSequenceScript : MonoBehaviour
                             sb.Append("a recursive function of " + offset + "a+b, where a is the second previous term and b is the previous term");
                             break;
                         case 3:
-                            start = UnityEngine.Random.Range(-3, 3);
+                            k = UnityEngine.Random.Range(0, 2);
+                            start = k == 0 ? UnityEngine.Random.Range(0, 3) : UnityEngine.Random.Range(-3, -1);
                             secondStart = Convert.ToInt32(Math.Abs(UnityEngine.Random.Range(start + 1, start + 3)));
+                            while (secondStart == 0) { secondStart++; }
                             sequence = sequencePatterns.RecursiveProd(start, secondStart, 6);
                             sb.Append("a recursive function of a+b-ab, where a is the second previous term and b is the previous term");
                             break;
