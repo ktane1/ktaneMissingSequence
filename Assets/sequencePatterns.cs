@@ -165,15 +165,13 @@ public class sequencePatterns : MonoBehaviour
     }
 
     //Special arithmetic offsets (primes, perfect squares, properties of numbers etc.)
-    public static List<int> Special(int start, int rnd, int termNo)
+    public static List<int> Special(int start, int rnd, int rnd2, int termNo)
     {
         List<int> results = new List<int>();
-        int rnd2 = 0;
         int k = 0;
         switch (rnd)
         {
             case 0://Digital root
-                rnd2 = UnityEngine.Random.Range(0, 2);
                 for (int i = 0; i < termNo; i++)
                 {
                     if (i == 0) 
@@ -208,7 +206,6 @@ public class sequencePatterns : MonoBehaviour
                 break;
 
             case 2://Product of digits
-                rnd2 = UnityEngine.Random.Range(0, 3);
                 for (int i = 0; i < termNo; i++)
                 {
                     if (i == 0) { results.Add(start); }
@@ -232,7 +229,6 @@ public class sequencePatterns : MonoBehaviour
                 break;
 
             case 3://Primes
-                rnd2 = UnityEngine.Random.Range(0, 3);
                 k = UnityEngine.Random.Range(0, primes.Count - 6);
                 for (int i = 0; i < termNo; i++)
                 {
@@ -257,7 +253,6 @@ public class sequencePatterns : MonoBehaviour
                 break;
 
             case 4://Perfect Squares
-                rnd2 = UnityEngine.Random.Range(0, 3);
                 k = UnityEngine.Random.Range(0, squares.Count - 6);
                 for (int i = 0; i < termNo; i++)
                 {
@@ -282,7 +277,6 @@ public class sequencePatterns : MonoBehaviour
                 break;
 
             case 5://Perfect Cubes
-                rnd2 = UnityEngine.Random.Range(0, 3);
                 k = UnityEngine.Random.Range(0, cubes.Count - 10);
                 for (int i = 0; i < termNo; i++)
                 {

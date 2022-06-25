@@ -201,6 +201,7 @@ public class missingSequenceScript : MonoBehaviour
             int offStart = 0;
             int offset = 0;
             int k = 0;
+            int neg = 0;
             List<int> sequence = new List<int>();
             switch (rnd)
             {
@@ -218,24 +219,13 @@ public class missingSequenceScript : MonoBehaviour
                     else
                     {
                         start = UnityEngine.Random.Range(-100, 100);
-                        k = UnityEngine.Random.Range(0, 2);
-                        if (k == 0)
-                        {
-                            offStart = UnityEngine.Random.Range(-4, 0);
-                        }
-                        else
-                        {
-                            offStart = UnityEngine.Random.Range(1, 5);
-                        }
-                        k = UnityEngine.Random.Range(0, 2);
-                        if (k == 0)
-                        {
-                            offset = UnityEngine.Random.Range(-5, -1);
-                        }
-                        else
-                        {
-                            offset = UnityEngine.Random.Range(2, 6);
-                        }
+
+                        neg = UnityEngine.Random.Range(0, 2);
+                        offStart = UnityEngine.Random.Range(1, 5) * (neg == 0 ? 1 : -1);
+
+                        neg = UnityEngine.Random.Range(0, 2);
+                        offset = UnityEngine.Random.Range(2, 5) * (neg == 0 ? 1 : -1);
+
                         sequence = sequencePatterns.GPAPOff(start, offStart, offset, 6);
                         sb.Append("a geometric progression among the offsets with offset " + offset);
                         break;
@@ -265,8 +255,8 @@ public class missingSequenceScript : MonoBehaviour
                             sb.Append("a recursive function of " + offset + "a+b, where a is the second previous term and b is the previous term");
                             break;
                         case 3:
-                            k = UnityEngine.Random.Range(0, 2);
-                            start = k == 0 ? UnityEngine.Random.Range(0, 3) : UnityEngine.Random.Range(-3, -1);
+                            neg = UnityEngine.Random.Range(0, 2);
+                            start = UnityEngine.Random.Range(1, 3) * (neg == 0 ? 1 : -1); 
                             secondStart = Convert.ToInt32(Math.Abs(UnityEngine.Random.Range(start + 1, start + 3)));
                             while (secondStart == 0) { secondStart++; }
                             sequence = sequencePatterns.RecursiveProd(start, secondStart, 6);
@@ -277,26 +267,48 @@ public class missingSequenceScript : MonoBehaviour
                 case 2:
                     start = UnityEngine.Random.Range(0, 5000);
                     k = UnityEngine.Random.Range(0, 8);
+                    neg = UnityEngine.Random.Range(0, 3);//Adding or subtracting or alternate
                     switch (k)
                     {
                         case 0:
                             while (start % 9 == 0)
                             {
-                                start++;
+                                start = UnityEngine.Random.Range(0, 5000);
                             }
+                            neg = UnityEngine.Random.Range(0, 2);
                             sb.Append("the digital root as offset");
                             break;
                         case 1:
                             while (sequencePatterns.SumOfDigits(start) % 9 == 0)
                             {
-                                start++;
+                                start = UnityEngine.Random.Range(0, 5000);
                             }
                             sb.Append("the sum of digits as offset");
                             break;
                         case 2:
-                            while (start.ToString().Contains("0") || (start + sequencePatterns.ProdOfDigits(start)).ToString().Contains("0") || (start - sequencePatterns.ProdOfDigits(start)).ToString().Contains("0"))
+                            while (start.ToString().Contains("0") || (neg != 1 && (start + sequencePatterns.ProdOfDigits(start)).ToString().Contains("0")) || (neg != 0 && (start - sequencePatterns.ProdOfDigits(start)).ToString().Contains("0")))
                             {
-                                start++;
+                                start = UnityEngine.Random.Range(0, 5000);
+                                if (neg == 0 || neg == 2)
+                                {
+                                    for (int j = 0; j > start; j++)
+                                    {
+                                        if (j + sequencePatterns.ProdOfDigits(j) == start + sequencePatterns.ProdOfDigits(start))
+                                        {
+                                            start = UnityEngine.Random.Range(0, 5000);
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    for (int j = 5000; j < start; j--)
+                                    {
+                                        if (j - sequencePatterns.ProdOfDigits(j) == start - sequencePatterns.ProdOfDigits(start))
+                                        {
+                                            start = UnityEngine.Random.Range(0, 5000);
+                                        }
+                                    }
+                                }
                             }
                             sb.Append("the product of digits as offset");
                             break;
@@ -323,7 +335,7 @@ public class missingSequenceScript : MonoBehaviour
                         default:
                             break;
                     }
-                    sequence = sequencePatterns.Special(start, k, 6);
+                    sequence = sequencePatterns.Special(start, k, neg, 6);
                     break;
 
                 case 3:
@@ -331,34 +343,34 @@ public class missingSequenceScript : MonoBehaviour
                     switch (k)
                     {
                         case 0:
-                            k = UnityEngine.Random.Range(0, 2);
-                            if (k == 0) { start = UnityEngine.Random.Range(1, 8); }
-                            else { start = UnityEngine.Random.Range(-8, 0); }
-                            k = UnityEngine.Random.Range(0, 2);
-                            if (k == 0) { secondStart = UnityEngine.Random.Range(1, 3); }
-                            else { secondStart = UnityEngine.Random.Range(-3, 0); }
-                            k = UnityEngine.Random.Range(0, 2);
-                            if (k == 0) { offStart = UnityEngine.Random.Range(1, 5); }
-                            else { offStart = UnityEngine.Random.Range(-4, -1); }
-                            k = UnityEngine.Random.Range(0, 2);
-                            if (k == 0) { offset = UnityEngine.Random.Range(2, 3); }
-                            else { offset = UnityEngine.Random.Range(-2, 0); }
+                            neg = UnityEngine.Random.Range(0, 2);
+                            start = UnityEngine.Random.Range(1, 8) * (neg == 0 ? 1 : -1);
+
+                            neg = UnityEngine.Random.Range(0, 2);
+                            secondStart = UnityEngine.Random.Range(1, 3) * (neg == 0 ? 1 : -1);
+
+                            neg = UnityEngine.Random.Range(0, 2);
+                            offStart = UnityEngine.Random.Range(1, 5) * (neg == 0 ? 1 : -1);
+
+                            neg = UnityEngine.Random.Range(0, 2);
+                            offset = UnityEngine.Random.Range(2, 3) * (neg == 0 ? 1 : -1);
+
                             sequence = sequencePatterns.Comb(sequencePatterns.AP(start, offStart, 6), sequencePatterns.GP(secondStart, offset, 6), 6);
                             sb.Append("a combination via multiplication of an arithmetic progression with first term " + start + " and offset " + offStart + " and a geometric progression with first term " + secondStart + " and offset " + offset);
                             break;
                         case 1:
-                            k = UnityEngine.Random.Range(0, 2);
-                            if (k == 0) { start = UnityEngine.Random.Range(1, 10); }
-                            else { start = UnityEngine.Random.Range(-10, 0); }
-                            k = UnityEngine.Random.Range(0, 2);
-                            if (k == 0) { secondStart = UnityEngine.Random.Range(1, 10); }
-                            else { secondStart = UnityEngine.Random.Range(-10, 0); }
-                            k = UnityEngine.Random.Range(0, 2);
-                            if (k == 0) { offStart = UnityEngine.Random.Range(1, 10); }
-                            else { offStart = UnityEngine.Random.Range(-10, 0); }
-                            k = UnityEngine.Random.Range(0, 2);
-                            if (k == 0) { offset = UnityEngine.Random.Range(1, 10); }
-                            else { offset = UnityEngine.Random.Range(-10, 0); }
+                            neg = UnityEngine.Random.Range(0, 2);
+                            start = UnityEngine.Random.Range(1, 10) * (neg == 0 ? 1 : -1);
+
+                            neg = UnityEngine.Random.Range(0, 2);
+                            secondStart = UnityEngine.Random.Range(1, 10) * (neg == 0 ? 1 : -1);
+
+                            neg = UnityEngine.Random.Range(0, 2);
+                            offStart = UnityEngine.Random.Range(1, 10) * (neg == 0 ? 1 : -1);
+
+                            neg = UnityEngine.Random.Range(0, 2);
+                            offset = UnityEngine.Random.Range(1, 10) * neg == 0 ? 1 : -1;
+
                             sequence = sequencePatterns.Comb(sequencePatterns.AP(start, offStart, 6), sequencePatterns.AP(secondStart, offset, 6), 6);
                             sb.Append("a combination via multiplication of two arithmetic progressions, one with first term " + start + " and offset " + offStart + " and another with first term " + secondStart + " and offset " + offset);
                             break;
@@ -370,9 +382,10 @@ public class missingSequenceScript : MonoBehaviour
                                 primes.Add(sequencePatterns.primes[k + j]);
                             }
                             start = UnityEngine.Random.Range(-50, 50);
-                            k = UnityEngine.Random.Range(0, 2);
-                            if (k == 0) { offset = UnityEngine.Random.Range(1, 10); }
-                            else { offset = UnityEngine.Random.Range(-10, -1); }
+
+                            neg = UnityEngine.Random.Range(0, 2);
+                            offset = UnityEngine.Random.Range(1, 10) * (neg == 0 ? 1 : -1);
+
                             sequence = sequencePatterns.Comb(sequencePatterns.AP(start, offset, 6), primes, 6);
                             sb.Append("a combination via multiplication of an arithmetic progression with first term " + start + " and offset " + offset + ", and a set of ascending prime numbers starting with " + primes[0]);
                             break;
