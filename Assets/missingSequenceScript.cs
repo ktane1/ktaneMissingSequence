@@ -256,9 +256,9 @@ public class missingSequenceScript : MonoBehaviour
                             break;
                         case 3:
                             neg = UnityEngine.Random.Range(0, 2);
-                            start = UnityEngine.Random.Range(1, 3) * (neg == 0 ? 1 : -1); 
+                            start = neg == 0 ? UnityEngine.Random.Range(2, 4) : UnityEngine.Random.Range(-5, -2); 
                             secondStart = Convert.ToInt32(Math.Abs(UnityEngine.Random.Range(start + 1, start + 3)));
-                            while (secondStart == 0) { secondStart++; }
+                            while (secondStart <= 1) { secondStart++; }
                             sequence = sequencePatterns.RecursiveProd(start, secondStart, 6);
                             sb.Append("a recursive function of a+b-ab, where a is the second previous term and b is the previous term");
                             break;
@@ -369,7 +369,7 @@ public class missingSequenceScript : MonoBehaviour
                             offStart = UnityEngine.Random.Range(1, 10) * (neg == 0 ? 1 : -1);
 
                             neg = UnityEngine.Random.Range(0, 2);
-                            offset = UnityEngine.Random.Range(1, 10) * neg == 0 ? 1 : -1;
+                            offset = UnityEngine.Random.Range(1, 10) * (neg == 0 ? 1 : -1);
 
                             sequence = sequencePatterns.Comb(sequencePatterns.AP(start, offStart, 6), sequencePatterns.AP(secondStart, offset, 6), 6);
                             sb.Append("a combination via multiplication of two arithmetic progressions, one with first term " + start + " and offset " + offStart + " and another with first term " + secondStart + " and offset " + offset);
@@ -394,8 +394,8 @@ public class missingSequenceScript : MonoBehaviour
 
                 case 4:
                     k = UnityEngine.Random.Range(0, 3);
-                    offset = UnityEngine.Random.Range(-5, 6);
-                    if (offset == 0) { offset++; }
+                    neg = UnityEngine.Random.Range(0, 2);
+                    offset = UnityEngine.Random.Range(1, 6) * (neg == 0 ? 1 : -1);
                     switch (k)
                     {
                         case 0:
