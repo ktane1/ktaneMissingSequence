@@ -286,26 +286,22 @@ public class missingSequenceScript : MonoBehaviour
                             sb.Append("the sum of digits as offset");
                             break;
                         case 2:
-                            while (start.ToString().Contains("0") || (neg != 1 && (start + sequencePatterns.ProdOfDigits(start)).ToString().Contains("0")) || (neg != 0 && (start - sequencePatterns.ProdOfDigits(start)).ToString().Contains("0")))
+                            bool reset = true;//Ambiguity fix
+                            while (reset)
                             {
+                                reset = false;
                                 start = UnityEngine.Random.Range(0, 5000);
-                                if (neg == 0 || neg == 2)
+                                if (start.ToString().Contains("0") || (neg != 1 && (start + sequencePatterns.ProdOfDigits(start)).ToString().Contains("0")) || (neg != 0 && (start - sequencePatterns.ProdOfDigits(start)).ToString().Contains("0")))
                                 {
-                                    for (int j = 0; j > start; j++)
-                                    {
-                                        if (j + sequencePatterns.ProdOfDigits(j) == start + sequencePatterns.ProdOfDigits(start))
-                                        {
-                                            start = UnityEngine.Random.Range(0, 5000);
-                                        }
-                                    }
+                                    reset = true;
                                 }
                                 else
                                 {
-                                    for (int j = 5000; j < start; j--)
+                                    for (int j = 0; j < 5000; j++)
                                     {
-                                        if (j - sequencePatterns.ProdOfDigits(j) == start - sequencePatterns.ProdOfDigits(start))
+                                        if ((j != start) && (start + sequencePatterns.ProdOfDigits(start) == j + sequencePatterns.ProdOfDigits(j) || start - sequencePatterns.ProdOfDigits(start) == j - sequencePatterns.ProdOfDigits(j)))
                                         {
-                                            start = UnityEngine.Random.Range(0, 5000);
+                                            reset = true;
                                         }
                                     }
                                 }
