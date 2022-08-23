@@ -232,7 +232,7 @@ public class missingSequenceScript : MonoBehaviour
                     }
 
                 case 1:
-                    k = UnityEngine.Random.Range(0, 4);
+                    k = UnityEngine.Random.Range(0, 6);
                     switch (k)
                     {
                         case 0:
@@ -242,19 +242,33 @@ public class missingSequenceScript : MonoBehaviour
                             sb.Append("the Fibonacci progression");
                             break;
                         case 1:
-                            start = UnityEngine.Random.Range(-100, 100);
-                            secondStart = UnityEngine.Random.Range(start + 1, start + 100);
+                            start = UnityEngine.Random.Range(-500, 500);
+                            secondStart = UnityEngine.Random.Range(start + 1, start + 300);
                             sequence = sequencePatterns.RecursiveEz(start, secondStart, 6);
                             sb.Append("a recursive function of a-b, where a is the second previous term and b is the previous term");
                             break;
                         case 2:
                             start = UnityEngine.Random.Range(-20, 20);
                             secondStart = UnityEngine.Random.Range(start + 1, start + 50);
-                            offset = UnityEngine.Random.Range(2, 6);
-                            sequence = sequencePatterns.RecursiveMed(start, secondStart, offset, 6);
+                            offset = UnityEngine.Random.Range(2, 9);
+                            sequence = sequencePatterns.RecursiveMed(start, secondStart, offset, 6, 0);
                             sb.Append("a recursive function of " + offset + "a+b, where a is the second previous term and b is the previous term");
                             break;
                         case 3:
+                            start = UnityEngine.Random.Range(-3, 3);
+                            secondStart = UnityEngine.Random.Range(start + 1, start + 3);
+                            offset = UnityEngine.Random.Range(2, 5);
+                            sequence = sequencePatterns.RecursiveMed(start, secondStart, offset, 6, 1);
+                            sb.Append("a recursive function of a+" + offset + "b, where a is the second previous term and b is the previous term");
+                            break;
+                        case 4:
+                            start = UnityEngine.Random.Range(-500, 500);
+                            secondStart = UnityEngine.Random.Range(start + 1, start + 200);
+                            offset = UnityEngine.Random.Range(0, 100);
+                            sequence = sequencePatterns.RecursiveAdd(start, secondStart, offset, 6);
+                            sb.Append("a recursive function of a+b+" + offset + ", where a is the second previous term and b is the previous term");
+                            break;
+                        case 5:
                             neg = UnityEngine.Random.Range(0, 2);
                             start = neg == 0 ? UnityEngine.Random.Range(2, 4) : UnityEngine.Random.Range(-5, -2); 
                             secondStart = Convert.ToInt32(Math.Abs(UnityEngine.Random.Range(start + 1, start + 3)));
@@ -335,7 +349,11 @@ public class missingSequenceScript : MonoBehaviour
                     break;
 
                 case 3:
-                    k = UnityEngine.Random.Range(0, 3);
+                    k = UnityEngine.Random.Range(0, 4);
+                    List<int> primes = new List<int>();
+                    List<int> squares = new List<int>();
+                    string tempLog = "";
+                    string tempLog2 = "";
                     switch (k)
                     {
                         case 0:
@@ -354,6 +372,7 @@ public class missingSequenceScript : MonoBehaviour
                             sequence = sequencePatterns.Comb(sequencePatterns.AP(start, offStart, 6), sequencePatterns.GP(secondStart, offset, 6), 6);
                             sb.Append("a combination via multiplication of an arithmetic progression with first term " + start + " and offset " + offStart + " and a geometric progression with first term " + secondStart + " and offset " + offset);
                             break;
+
                         case 1:
                             neg = UnityEngine.Random.Range(0, 2);
                             start = UnityEngine.Random.Range(1, 10) * (neg == 0 ? 1 : -1);
@@ -370,12 +389,25 @@ public class missingSequenceScript : MonoBehaviour
                             sequence = sequencePatterns.Comb(sequencePatterns.AP(start, offStart, 6), sequencePatterns.AP(secondStart, offset, 6), 6);
                             sb.Append("a combination via multiplication of two arithmetic progressions, one with first term " + start + " and offset " + offStart + " and another with first term " + secondStart + " and offset " + offset);
                             break;
+
                         case 2:
+                            neg = UnityEngine.Random.Range(0, 2);//Ascending or descending
                             k = UnityEngine.Random.Range(0, 19);
-                            List<int> primes = new List<int>();
-                            for (int j = 0; j < 6; j++)
+                            if (neg == 0)
                             {
-                                primes.Add(sequencePatterns.primes[k + j]);
+                                for (int j = 0; j < 6; j++)
+                                {
+                                    primes.Add(sequencePatterns.primes[k + j]);
+                                }
+                                tempLog = "ascending";
+                            }
+                            else
+                            {
+                                for (int j = 6; j > 0; j--)
+                                {
+                                    primes.Add(sequencePatterns.primes[k + j]);
+                                }
+                                tempLog = "descending";
                             }
                             start = UnityEngine.Random.Range(-50, 50);
 
@@ -383,7 +415,50 @@ public class missingSequenceScript : MonoBehaviour
                             offset = UnityEngine.Random.Range(1, 10) * (neg == 0 ? 1 : -1);
 
                             sequence = sequencePatterns.Comb(sequencePatterns.AP(start, offset, 6), primes, 6);
-                            sb.Append("a combination via multiplication of an arithmetic progression with first term " + start + " and offset " + offset + ", and a set of ascending prime numbers starting with " + primes[0]);
+                            sb.Append("a combination via multiplication of an arithmetic progression with first term " + start + " and offset " + offset + ", and a set of " + tempLog + " prime numbers starting with " + primes[0]);
+                            break;
+
+                        case 3:
+                            neg = UnityEngine.Random.Range(0, 4);//Ascending or descending for both sequences
+
+                            k = UnityEngine.Random.Range(0, 12);
+                            if (neg % 2 == 0)
+                            {
+                                for (int j = 0; j < 6; j++)
+                                {
+                                    primes.Add(sequencePatterns.primes[k + j]);
+                                }
+                                tempLog = "ascending";
+                            }
+                            else
+                            {
+                                for (int j = 6; j > 0; j--)
+                                {
+                                    primes.Add(sequencePatterns.primes[k + j]);
+                                }
+                                tempLog = "descending";
+                            }
+
+                            k = UnityEngine.Random.Range(0, 10);
+                            if (neg / 2 == 0)
+                            {
+                                for (int j = 0; j < 6; j++)
+                                {
+                                    squares.Add(sequencePatterns.squares[k + j]);
+                                }
+                                tempLog2 = "ascending";
+                            }
+                            else
+                            {
+                                for (int j = 6; j > 0; j--)
+                                {
+                                    squares.Add(sequencePatterns.squares[k + j]);
+                                }
+                                tempLog2 = "descending";
+                            }
+
+                            sequence = sequencePatterns.Comb(primes, squares, 6);
+                            sb.Append("a combination via multiplication of a set of " + tempLog + " prime numbers starting with " + primes[0] + ", and a set of " + tempLog2 + " perfect squares starting with " + squares[0]);
                             break;
                     }
                     break;

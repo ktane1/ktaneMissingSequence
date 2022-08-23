@@ -374,15 +374,24 @@ public class sequencePatterns : MonoBehaviour
         return results;
     }
 
-    //Recursive in the form na+b
-    public static List<int> RecursiveMed(int first, int second, int offset, int termNo)
+    //Recursive in the form na+b or a+nb
+    public static List<int> RecursiveMed(int first, int second, int offset, int termNo, int version)
     {
         List<int> results = new List<int>();
         for (int i = 0; i < termNo; i++)
         {
-            if (i == 0) { results.Add(first); }
-            else if (i == 1) { results.Add(second); }
-            else { results.Add(offset * results[i - 2] + results[i - 1]); }
+            if (version == 0)
+            {
+                if (i == 0) { results.Add(first); }
+                else if (i == 1) { results.Add(second); }
+                else { results.Add(offset * results[i - 2] + results[i - 1]); }
+            }
+            else
+            {
+                if (i == 0) { results.Add(first); }
+                else if (i == 1) { results.Add(second); }
+                else { results.Add(results[i - 2] + offset * results[i - 1]); }
+            }
         }
         return results;
     }
@@ -400,6 +409,18 @@ public class sequencePatterns : MonoBehaviour
         return results;
     }
 
+    //Recursive in the form a+b+n
+    public static List<int> RecursiveAdd(int first, int second, int offset, int termNo)
+    {
+        List<int> results = new List<int>();
+        for (int i = 0; i < termNo; i++)
+        {
+            if (i == 0) { results.Add(first); }
+            else if (i == 1) { results.Add(second); }
+            else { results.Add(results[i - 2] + results[i - 1] + offset); }
+        }
+        return results;
+    }
 
     //Combination of two sequences (multiplication)
     public static List<int> Comb(List<int> first, List<int> second, int termNo)
