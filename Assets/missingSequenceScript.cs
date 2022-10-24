@@ -311,7 +311,7 @@ public class missingSequenceScript : MonoBehaviour
                                 }
                                 else
                                 {
-                                    for (int j = 0; j < 5000; j++)
+                                    for (int j = 0; j < 10000; j++)
                                     {
                                         if ((j != start) && (start + sequencePatterns.ProdOfDigits(start) == j + sequencePatterns.ProdOfDigits(j) || start - sequencePatterns.ProdOfDigits(start) == j - sequencePatterns.ProdOfDigits(j)))
                                         {
