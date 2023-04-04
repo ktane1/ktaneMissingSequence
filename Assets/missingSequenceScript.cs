@@ -89,6 +89,11 @@ public class missingSequenceScript : MonoBehaviour
             screenActivated = true;
             StartCoroutine(countdown());
         }
+        else if (striked)
+        {
+            audio.PlaySoundAtTransform("transition", transform);
+            StartCoroutine(maskChange());
+        }
         else if (!inputMode)
         {
             inputMode = true;
@@ -100,7 +105,6 @@ public class missingSequenceScript : MonoBehaviour
         else
         {
             Debug.LogFormat("[Missing Sequence #{0}]: The values are submitted! Let's see...", moduleId);
-            audio.PlaySoundAtTransform("transition", transform);
             inputMode = false;
             for (int i = 0; i < answerChecks.Length; i++)
             {
@@ -124,6 +128,8 @@ public class missingSequenceScript : MonoBehaviour
                 audio.PlaySoundAtTransform("solve", transform);
                 module.HandlePass();
                 moduleSolved = true;
+                StartCoroutine(maskChange());
+                StartCoroutine(keypadReveal());
             }
             else
             {
@@ -144,8 +150,6 @@ public class missingSequenceScript : MonoBehaviour
                     }
                 }
             }
-            StartCoroutine(maskChange());
-            StartCoroutine(keypadReveal());
         }
     }
 
