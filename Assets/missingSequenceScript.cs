@@ -285,15 +285,23 @@ public class missingSequenceScript : MonoBehaviour
                 case 2:
                     start = UnityEngine.Random.Range(0, 5000);
                     k = UnityEngine.Random.Range(0, 8);
+                    bool reset = true;//Ambiguity fix
                     neg = UnityEngine.Random.Range(0, 3);//Adding or subtracting or alternate
                     switch (k)
                     {
                         case 0:
-                            while (start % 9 == 0)
+                            while (start % 9 == 0 || reset)
                             {
+                                reset = false;
                                 start = UnityEngine.Random.Range(0, 5000);
+                                for (int j = 1; j < 10; j++)
+                                {
+                                    if (sequencePatterns.DR(start + sequencePatterns.DR(start) - j) == j && j != sequencePatterns.DR(start))
+                                    {
+                                        reset = true;
+                                    }
+                                }
                             }
-                            neg = UnityEngine.Random.Range(0, 2);
                             sb.Append("the digital root as offset");
                             break;
                         case 1:
@@ -304,7 +312,6 @@ public class missingSequenceScript : MonoBehaviour
                             sb.Append("the sum of digits as offset");
                             break;
                         case 2:
-                            bool reset = true;//Ambiguity fix
                             while (reset)
                             {
                                 reset = false;
@@ -343,7 +350,18 @@ public class missingSequenceScript : MonoBehaviour
                             sb.Append("the largest prime factor as offset");
                             break;
                         case 7:
-                            start = sequencePatterns.primes[UnityEngine.Random.Range(1, 10)] * sequencePatterns.primes[UnityEngine.Random.Range(1, 10)];
+                            while (reset)
+                            {
+                                reset = false;
+                                start = sequencePatterns.primes[UnityEngine.Random.Range(1, 10)] * sequencePatterns.primes[UnityEngine.Random.Range(1, 10)];
+                                for (int j = start + sequencePatterns.Factor(start).Sum() - 1; j > 3; j--)
+                                {
+                                    if (j + sequencePatterns.Factor(j).Sum() == start + sequencePatterns.Factor(start).Sum() && j != start)
+                                    {
+                                        reset = true;
+                                    }
+                                }
+                            }
                             sb.Append("the sum of all prime factors as offset");
                             break;
                         default:
