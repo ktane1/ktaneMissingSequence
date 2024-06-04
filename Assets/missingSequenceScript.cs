@@ -200,6 +200,10 @@ public class missingSequenceScript : MonoBehaviour
         for (int i = 0; i < generatedSequences.Length; i++)
         {
             int rnd = UnityEngine.Random.Range(0, 5);
+            while (missingSequences[i] == 0 && rnd == 2)
+            {
+                rnd = UnityEngine.Random.Range(0, 5);
+            }
             int start = 0;
             int secondStart = 0;
             int offStart = 0;

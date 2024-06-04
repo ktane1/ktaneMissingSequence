@@ -18,11 +18,11 @@ MonoBehaviour:
     Super Brain.
 
 
-    Idea/Manual by Shadow Meow.
+    Idea/Manual by Umbra Moruka.
 
     Mod ID: missingSequence
 
     Manual Link: https://ktane.timwi.de/HTML/Missing%20Sequence.html'
-  version: 1.4.1
+  version: 1.4.3
   outputFolder: build
   previewImage: {fileID: 2800000, guid: 9a8b334e8f91c12429242c5f5bedee25, type: 3}
